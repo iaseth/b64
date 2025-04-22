@@ -7,6 +7,7 @@ A lightweight command-line tool to encode or decode files using Base64.
 ## 🚀 Features
 
 - ✅ Encode or decode Base64
+- ✅ Input from file(s) or stdin
 - ✅ Combine multiple input files
 - ✅ Output to a file or stdout
 - ✅ Flexible CLI argument order
@@ -41,23 +42,32 @@ b64 [options] <file1> [file2 ...]
 **Encode files and write to stdout:**
 
 ```bash
-./b64 file1.bin file2.bin > encoded.b64
+./b64 file1.txt file2.txt
 ```
 
-**Decode Base64 file to binary:**
+**Encode files and write to file:**
 
 ```bash
-./b64 -d -o output.bin encoded.b64
+./b64 file1.txt file2.txt -o encoded.b64
 ```
 
-**Flexible argument order:**
+**Decode Base64 file to stdin:**
 
 ```bash
-./b64 -o result.b64 file1 file2
-./b64 file1 -d -o decoded.bin
+./b64 -d encoded.b64
 ```
 
-## 📂 Project Structure
+**Encode and then Decode the same file:**
+
+```bash
+./b64 README.md | ./b64 -d
+```
+
+`./b64 README.md` encodes the file to base64,
+`|` redirects the output to `./b64 -d`,
+when then decodes it back.
+
+<!-- ## 📂 Project Structure
 
 ```
 b64/
@@ -66,12 +76,8 @@ b64/
 ├── build/            # Build artifacts (ignored by git)
 ├── CMakeLists.txt    # Build configuration
 └── README.md         # Project documentation
-```
+``` -->
 
 ## 📄 License
 
 MIT License
-
----
-
-Feel free to fork, hack, and improve. PRs welcome!
