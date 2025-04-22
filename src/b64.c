@@ -25,7 +25,7 @@ int b64_index(char c) {
 	return -1;
 }
 
-void base64_decode(FILE *in, FILE *out) {
+int base64_decode(FILE *in, FILE *out) {
 	unsigned char inbuf[4], outbuf[3];
 	int val[4];
 	size_t i, bytes;
@@ -47,7 +47,7 @@ void base64_decode(FILE *in, FILE *out) {
 				int idx = b64_index(ch);
 				if (idx == -1) {
 					fprintf(stderr, "Invalid base64 character: '%c'\n", ch);
-					exit(1);
+					return 1;
 				}
 				inbuf[i++] = ch;
 			}
@@ -56,13 +56,13 @@ void base64_decode(FILE *in, FILE *out) {
 		if (i == 0) break; // nothing read, done
 		if (i != 4) {
 			fprintf(stderr, "Incomplete base64 block\n");
-			exit(1);
+			return 1;
 		}
 
 		// Validate padding placement
 		if (inbuf[0] == '=' || inbuf[1] == '=') {
 			fprintf(stderr, "Invalid padding position in base64 block\n");
-			exit(1);
+			return 1;
 		}
 
 		for (int j = 0; j < 4; ++j)
@@ -74,7 +74,7 @@ void base64_decode(FILE *in, FILE *out) {
 
 		if (inbuf[2] == '=' && inbuf[3] != '=') {
 			fprintf(stderr, "Invalid padding sequence (only last two chars can be '=')\n");
-			exit(1);
+			return 1;
 		}
 
 		if (inbuf[2] == '=')
@@ -86,9 +86,12 @@ void base64_decode(FILE *in, FILE *out) {
 
 		fwrite(outbuf, 1, bytes, out);
 	}
+
+	return 0;
 }
 
 int main(int argc, char *argv[]) {
+	int error = 0;
 	int decode = 0;
 	FILE *out = stdout;
 	char **infiles = malloc(argc * sizeof(char*));
@@ -102,14 +105,21 @@ int main(int argc, char *argv[]) {
 			out = fopen(argv[++i], decode ? "wb" : "w");
 			if (!out) {
 				perror("fopen output");
-				return 1;
+				error = 1;
+				break;
 			}
 		} else if (argv[i][0] == '-') {
-			fprintf(stderr, "Unknown option: %s\n", argv[i]);
-			return 1;
+			fprintf(stderr, "Unknown option: '%s'\n", argv[i]);
+			error = 1;
+			break;
 		} else {
 			infiles[n_infiles++] = argv[i];
 		}
+	}
+
+	if (error) {
+		free(infiles);
+		return error;
 	}
 
 	// Read from stdin if no input files given
@@ -126,14 +136,18 @@ int main(int argc, char *argv[]) {
 				return 1;
 			}
 
-			if (decode) base64_decode(in, out);
-			else base64_encode(in, out);
+			if (decode) {
+				error = base64_decode(in, out);
+			} else {
+				base64_encode(in, out);
+			}
 
 			fclose(in);
+			if (error) break;
 		}
 	}
 
 	if (out != stdout) fclose(out);
 	free(infiles);
-	return 0;
+	return error;
 }

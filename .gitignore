@@ -8,6 +8,8 @@
 # Executable
 /b64
 
+*.b64
+
 # Editor and OS files
 *.swp
 *~
