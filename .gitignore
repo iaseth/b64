@@ -1,0 +1,16 @@
+# Build directory
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/Makefile
+
+# Executable
+/b64
+
+# Editor and OS files
+*.swp
+*~
+.DS_Store
+.vscode/
+.idea/
