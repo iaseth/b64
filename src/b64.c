@@ -21,7 +21,7 @@ void base64_encode(FILE *in, FILE *out) {
 	}
 }
 
-int b64_index(char c) {
+int base64_index(char c) {
 	if (c >= 'A' && c <= 'Z') return c - 'A';
 	if (c >= 'a' && c <= 'z') return c - 'a' + 26;
 	if (c >= '0' && c <= '9') return c - '0' + 52;
@@ -49,7 +49,7 @@ int base64_decode(FILE *in, FILE *out) {
 				padding++;
 				inbuf[i++] = ch;
 			} else {
-				int idx = b64_index(ch);
+				int idx = base64_index(ch);
 				if (idx == -1) {
 					fprintf(stderr, "Invalid base64 character: '%c'\n", ch);
 					return 1;
@@ -71,7 +71,7 @@ int base64_decode(FILE *in, FILE *out) {
 		}
 
 		for (int j = 0; j < 4; ++j)
-			val[j] = (inbuf[j] == '=') ? 0 : b64_index(inbuf[j]);
+			val[j] = (inbuf[j] == '=') ? 0 : base64_index(inbuf[j]);
 
 		outbuf[0] = (val[0] << 2) | (val[1] >> 4);
 		outbuf[1] = ((val[1] & 0x0F) << 4) | (val[2] >> 2);
