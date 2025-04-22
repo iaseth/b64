@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 
 static const char b64_table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+const char* COMPILE_INFO = "b64 v1.0 - Compiled on " __DATE__ " at " __TIME__;
 
 void base64_encode(FILE *in, FILE *out) {
 	unsigned char inbuf[3], outbuf[4];
@@ -92,15 +95,27 @@ int base64_decode(FILE *in, FILE *out) {
 
 int main(int argc, char *argv[]) {
 	int error = 0;
-	int decode = 0;
+	bool decode = 0;
+	bool ignore_garbage = 0; // not implemented yet, may not be needed
+
 	FILE *out = stdout;
 	char **infiles = malloc(argc * sizeof(char*));
 	int n_infiles = 0;
 
 	// Parse args
 	for (int i = 1; i < argc; i++) {
-		if (strcmp(argv[i], "-d") == 0) {
-			decode = 1;
+		if (strcmp(argv[i], "-d") == 0 || strcmp(argv[i], "--decode") == 0) {
+			decode = true;
+		} else if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--ignore-garbage") == 0) {
+			ignore_garbage = true;
+		} else if (strcmp(argv[i], "--help") == 0) {
+			printf("Help info is yet to be added.\n");
+			free(infiles);
+			return 0;
+		} else if (strcmp(argv[i], "--version") == 0) {
+			printf("%s\n", COMPILE_INFO);
+			free(infiles);
+			return 0;
 		} else if (strcmp(argv[i], "-o") == 0 && i + 1 < argc) {
 			out = fopen(argv[++i], decode ? "wb" : "w");
 			if (!out) {
