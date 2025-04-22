@@ -112,23 +112,25 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	// Read from stdin if no input files given
 	if (n_infiles == 0) {
-		fprintf(stderr, "Usage: %s [-d] [-o <outfile>] <infile1> [infile2 ...]\n", argv[0]);
-		return 1;
-	}
+		if (decode) base64_decode(stdin, out);
+		else base64_encode(stdin, out);
+	} else {
+		for (int i = 0; i < n_infiles; ++i) {
+			FILE *in = fopen(infiles[i], "rb");
+			if (!in) {
+				perror(infiles[i]);
+				if (out != stdout) fclose(out);
+				free(infiles);
+				return 1;
+			}
 
-	for (int i = 0; i < n_infiles; ++i) {
-		FILE *in = fopen(infiles[i], "rb");
-		if (!in) {
-			perror(infiles[i]);
-			if (out != stdout) fclose(out);
-			return 1;
+			if (decode) base64_decode(in, out);
+			else base64_encode(in, out);
+
+			fclose(in);
 		}
-
-		if (decode) base64_decode(in, out);
-		else base64_encode(in, out);
-
-		fclose(in);
 	}
 
 	if (out != stdout) fclose(out);
