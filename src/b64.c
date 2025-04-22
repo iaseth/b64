@@ -29,25 +29,53 @@ void base64_decode(FILE *in, FILE *out) {
 	unsigned char inbuf[4], outbuf[3];
 	int val[4];
 	size_t i, bytes;
+	int padding = 0;
+	int ch;
 
 	while (1) {
-		for (i = 0; i < 4; ++i) {
-			int ch;
-			do {
-				ch = fgetc(in);
-				if (ch == EOF) break;
-			} while (ch != '=' && b64_index(ch) < 0);
-			if (ch == EOF) break;
-			inbuf[i] = ch;
+		i = 0;
+		while (i < 4) {
+			ch = fgetc(in);
+			if (ch == EOF) {
+				break;
+			} else if (ch == '\n' || ch == '\r' || ch == ' ' || ch == '\t') {
+				continue; // skip whitespace
+			} else if (ch == '=') {
+				padding++;
+				inbuf[i++] = ch;
+			} else {
+				int idx = b64_index(ch);
+				if (idx == -1) {
+					fprintf(stderr, "Invalid base64 character: '%c'\n", ch);
+					exit(1);
+				}
+				inbuf[i++] = ch;
+			}
 		}
-		if (i == 0) break;
 
-		for (size_t j = 0; j < 4; ++j)
+		if (i == 0) break; // nothing read, done
+		if (i != 4) {
+			fprintf(stderr, "Incomplete base64 block\n");
+			exit(1);
+		}
+
+		// Validate padding placement
+		if (inbuf[0] == '=' || inbuf[1] == '=') {
+			fprintf(stderr, "Invalid padding position in base64 block\n");
+			exit(1);
+		}
+
+		for (int j = 0; j < 4; ++j)
 			val[j] = (inbuf[j] == '=') ? 0 : b64_index(inbuf[j]);
 
 		outbuf[0] = (val[0] << 2) | (val[1] >> 4);
 		outbuf[1] = ((val[1] & 0x0F) << 4) | (val[2] >> 2);
 		outbuf[2] = ((val[2] & 0x03) << 6) | val[3];
+
+		if (inbuf[2] == '=' && inbuf[3] != '=') {
+			fprintf(stderr, "Invalid padding sequence (only last two chars can be '=')\n");
+			exit(1);
+		}
 
 		if (inbuf[2] == '=')
 			bytes = 1;
@@ -57,7 +85,6 @@ void base64_decode(FILE *in, FILE *out) {
 			bytes = 3;
 
 		fwrite(outbuf, 1, bytes, out);
-		if (i < 4) break;
 	}
 }
 
