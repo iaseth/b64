@@ -110,11 +110,11 @@ int main(int argc, char *argv[]) {
 			decode = true;
 		} else if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--ignore-garbage") == 0) {
 			ignore_garbage = true;
-		} else if (strcmp(argv[i], "--help") == 0) {
+		} else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
 			printf("Help info is yet to be added.\n");
 			free(infiles);
 			return 0;
-		} else if (strcmp(argv[i], "--version") == 0) {
+		} else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0) {
 			printf("%s - %s - %s\n", APP_NAME, VERSION_FULL_STR, COMPILE_INFO);
 			free(infiles);
 			return 0;
