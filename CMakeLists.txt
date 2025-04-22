@@ -5,4 +5,8 @@ project(b64 C)
 set(CMAKE_C_STANDARD 99)
 
 # Add the executable
-add_executable(b64 src/main.c)
+add_executable(
+	b64
+	src/base64.c
+	src/main.c
+)
