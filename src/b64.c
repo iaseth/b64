@@ -3,9 +3,11 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "version.h"
+
 static const char b64_table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-const char* COMPILE_INFO = "b64 v1.0 - Compiled on " __DATE__ " at " __TIME__;
+const char* COMPILE_INFO = "Compiled on " __DATE__ " at " __TIME__;
 
 void base64_encode(FILE *in, FILE *out) {
 	unsigned char inbuf[3], outbuf[4];
@@ -113,7 +115,7 @@ int main(int argc, char *argv[]) {
 			free(infiles);
 			return 0;
 		} else if (strcmp(argv[i], "--version") == 0) {
-			printf("%s\n", COMPILE_INFO);
+			printf("%s - %s - %s\n", APP_NAME, VERSION_FULL_STR, COMPILE_INFO);
 			free(infiles);
 			return 0;
 		} else if (strcmp(argv[i], "-o") == 0 && i + 1 < argc) {
