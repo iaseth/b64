@@ -51,7 +51,7 @@ b64 [options] <file1> [file2 ...]
 ./b64 file1.txt file2.txt -o encoded.b64
 ```
 
-**Decode Base64 file to stdin:**
+**Decode Base64 file to stdout:**
 
 ```bash
 ./b64 -d encoded.b64
@@ -65,7 +65,7 @@ b64 [options] <file1> [file2 ...]
 
 `./b64 README.md` encodes the file to base64,
 `|` redirects the output to `./b64 -d`,
-when then decodes it back.
+which then decodes it back.
 
 <!-- ## 📂 Project Structure
 
