@@ -2,9 +2,7 @@
 
 
 
-static const char b64_table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-void base64_encode(FILE *in, FILE *out) {
+void base64_encode(FILE *in, FILE *out, const char *b64_table) {
 	unsigned char inbuf[3], outbuf[4];
 	size_t bytes;
 	while ((bytes = fread(inbuf, 1, 3, in)) > 0) {
@@ -16,16 +14,16 @@ void base64_encode(FILE *in, FILE *out) {
 	}
 }
 
-int base64_index(char c) {
+int base64_index(char c, const char *b64_table) {
 	if (c >= 'A' && c <= 'Z') return c - 'A';
 	if (c >= 'a' && c <= 'z') return c - 'a' + 26;
 	if (c >= '0' && c <= '9') return c - '0' + 52;
-	if (c == '+') return 62;
-	if (c == '/') return 63;
+	if (c == b64_table[62]) return 62;
+	if (c == b64_table[63]) return 63;
 	return -1;
 }
 
-int base64_decode(FILE *in, FILE *out) {
+int base64_decode(FILE *in, FILE *out, const char *b64_table) {
 	unsigned char inbuf[4], outbuf[3];
 	int val[4];
 	size_t i, bytes;
@@ -44,7 +42,7 @@ int base64_decode(FILE *in, FILE *out) {
 				padding++;
 				inbuf[i++] = ch;
 			} else {
-				int idx = base64_index(ch);
+				int idx = base64_index(ch, b64_table);
 				if (idx == -1) {
 					fprintf(stderr, "Invalid base64 character: '%c'\n", ch);
 					return 1;
@@ -66,7 +64,7 @@ int base64_decode(FILE *in, FILE *out) {
 		}
 
 		for (int j = 0; j < 4; ++j)
-			val[j] = (inbuf[j] == '=') ? 0 : base64_index(inbuf[j]);
+			val[j] = (inbuf[j] == '=') ? 0 : base64_index(inbuf[j], b64_table);
 
 		outbuf[0] = (val[0] << 2) | (val[1] >> 4);
 		outbuf[1] = ((val[1] & 0x0F) << 4) | (val[2] >> 2);
