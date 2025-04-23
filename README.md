@@ -38,6 +38,7 @@ b64 [options] <file1> [file2 ...]
 | `-d`         | `--decode`      | Decode instead of encode             |
 | `-u`         | `--url-safe`    | Use Base64URL encoding               |
 | `-h`         | `--help`        | Show help info                       |
+| `-l`         | `--list`        | List all available encodings         |
 | `-v`         | `--version`     | Show version info                    |
 
 ### Examples

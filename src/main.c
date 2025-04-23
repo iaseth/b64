@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
 				"  -u    --url-safe         use Base64URL encoding\n\n"
 
 				"  -h    --help             show this help message and exit\n"
+				"  -l    --list             list all available encodings\n"
 				"  -v    --version          show version information and exit\n"
 				"\n"
 				"If no input files are given, input is read from stdin.\n"
@@ -34,6 +35,12 @@ int main(int argc, char *argv[]) {
 				"  cat data | b64 > encoded.txt\n"
 				"\n"
 			);
+
+			return 0;
+		} else if (strcmp(argv[1], "-l") == 0 || strcmp(argv[1], "--list") == 0) {
+			printf("List of available encodings:\n");
+			printf("  Default                         '%s'\n", b64_table_default);
+			printf("  URL Safe    -u    --url-safe    '%s'\n", b64_table_url_safe);
 			return 0;
 		} else if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
 			printf("%s - %s - %s\n", APP_NAME, VERSION_FULL_STR, COMPILE_INFO);
