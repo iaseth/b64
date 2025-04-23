@@ -10,7 +10,7 @@ A lightweight command-line tool to encode or decode files using Base64.
 - ✅ Input from file(s) or stdin
 - ✅ Combine multiple input files
 - ✅ Output to a file or stdout
-- ✅ Flexible CLI argument order
+- ✅ Support for URL-safe encoding with `--url-safe`
 - ✅ Small, fast, and dependency-free
 
 ## 📦 Build
@@ -32,10 +32,13 @@ b64 [options] <file1> [file2 ...]
 
 ### Options
 
-| Option       | Description                          |
-|--------------|--------------------------------------|
-| `-d`         | Decode instead of encode             |
-| `-o <file>`  | Output to file instead of stdout     |
+| Option       | Long Option     | Description                          |
+|--------------|-----------------|--------------------------------------|
+| `-o <file>`  |                 | Output to file instead of stdout     |
+| `-d`         | `--decode`      | Decode instead of encode             |
+| `-u`         | `--url-safe`    | Use Base64URL encoding               |
+| `-h`         | `--help`        | Show help info                       |
+| `-v`         | `--version`     | Show version info                    |
 
 ### Examples
 
