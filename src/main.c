@@ -17,10 +17,14 @@ int main(int argc, char *argv[]) {
 				"Base64 encoder/decoder. Reads input files or stdin, writes to a single output or stdout.\n"
 				"\n"
 				"Options:\n"
-				"  -d    --decode       Decode input instead of encoding\n"
-				"  -o <file>            Write output to <file> instead of stdout\n"
-				"  -h    --help         Show this help message and exit\n"
-				"  -v    --version      Show version information and exit\n"
+				"  -o <file>                write output to <file> instead of stdout\n\n"
+
+				"  -d    --decode           decode input instead of encoding\n"
+				"  -i    --ignore-garbage   when decoding, ignore non-alphabet characters\n"
+				"  -u    --url-safe         use Base64URL encoding\n\n"
+
+				"  -h    --help             show this help message and exit\n"
+				"  -v    --version          show version information and exit\n"
 				"\n"
 				"If no input files are given, input is read from stdin.\n"
 				"\n"
@@ -38,8 +42,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	int error = 0;
-	bool decode = 0;
-	bool ignore_garbage = 0; // not implemented yet, may not be needed
+	bool decode = false;
+	bool ignore_garbage = false; // not implemented yet, may not be needed
+	bool url_safe = false; // not implemented yet
 
 	FILE *out = stdout;
 	char **infiles = malloc(argc * sizeof(char*));
@@ -51,6 +56,8 @@ int main(int argc, char *argv[]) {
 			decode = true;
 		} else if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--ignore-garbage") == 0) {
 			ignore_garbage = true;
+		} else if (strcmp(argv[i], "-u") == 0 || strcmp(argv[i], "--url-safe") == 0) {
+			url_safe = true;
 		} else if (strcmp(argv[i], "-o") == 0 && i + 1 < argc) {
 			out = fopen(argv[++i], decode ? "wb" : "w");
 			if (!out) {
@@ -68,6 +75,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	if (error) {
+		if (out != stdout) fclose(out);
 		free(infiles);
 		return error;
 	}
