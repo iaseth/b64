@@ -17,17 +17,18 @@ static const char b64_table_url_safe[] = FIRST_62_CHARS "-_";
  *
  * @param in           Input stream (opened in binary mode)
  * @param b64_table    b64 encoding table
- * @param out  Output stream (opened in text mode)
+ * @param out          Output stream (opened in text mode)
  */
-void base64_encode(FILE *in, FILE *out, const char *b64_table);
+void base64_encode(FILE *in, FILE *out, const char *b64_table, int words_per_line);
 
 /**
  * Decode base64 input from a FILE* stream, writing binary output to another stream.
  * Exits with error if invalid base64 is encountered.
  *
- * @param in           Input stream (opened in text mode)
- * @param b64_table    b64 encoding table
- * @param out  Output stream (opened in binary mode)
+ * @param in                 Input stream (opened in text mode)
+ * @param b64_table          b64 encoding table
+ * @param words_per_line     Each word is 4 chars
+ * @param out                Output stream (opened in binary mode)
  */
 int base64_decode(FILE *in, FILE *out, const char *b64_table);
 

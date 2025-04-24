@@ -37,6 +37,7 @@ b64 [options] <file1> [file2 ...]
 | `-o <file>`  |                 | Output to file instead of stdout     |
 | `-d`         | `--decode`      | Decode instead of encode             |
 | `-u`         | `--url-safe`    | Use Base64URL encoding               |
+| `-w`         | `--wrap`        | Wrap lines after 80 characters       |
 | `-h`         | `--help`        | Show help info                       |
 | `-l`         | `--list`        | List all available encodings         |
 | `-v`         | `--version`     | Show version info                    |

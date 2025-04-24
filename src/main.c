@@ -22,6 +22,7 @@ int main(int argc, char *argv[]) {
 				"  -d    --decode           decode input instead of encoding\n"
 				"  -i    --ignore-garbage   when decoding, ignore non-alphabet characters\n"
 				"  -u    --url-safe         use Base64URL encoding\n\n"
+				"  -w    --wrap             wrap encoded lines after 80 characters\n\n"
 
 				"  -h    --help             show this help message and exit\n"
 				"  -l    --list             list all available encodings\n"
@@ -51,6 +52,7 @@ int main(int argc, char *argv[]) {
 	int error = 0;
 	bool decode = false;
 	bool ignore_garbage = false; // not implemented yet, may not be needed
+	int words_per_line = 0;
 	const char *b64_table = b64_table_default;
 
 	FILE *out = stdout;
@@ -65,6 +67,8 @@ int main(int argc, char *argv[]) {
 			ignore_garbage = true;
 		} else if (strcmp(argv[i], "-u") == 0 || strcmp(argv[i], "--url-safe") == 0) {
 			b64_table = b64_table_url_safe;
+		} else if (strcmp(argv[i], "-w") == 0 || strcmp(argv[i], "--wrap") == 0) {
+			words_per_line = 20;
 		} else if (strcmp(argv[i], "-o") == 0 && i + 1 < argc) {
 			out = fopen(argv[++i], decode ? "wb" : "w");
 			if (!out) {
@@ -90,7 +94,7 @@ int main(int argc, char *argv[]) {
 	// Read from stdin if no input files given
 	if (n_infiles == 0) {
 		if (decode) base64_decode(stdin, out, b64_table);
-		else base64_encode(stdin, out, b64_table);
+		else base64_encode(stdin, out, b64_table, words_per_line);
 	} else {
 		for (int i = 0; i < n_infiles; ++i) {
 			FILE *in = fopen(infiles[i], "rb");
@@ -104,7 +108,7 @@ int main(int argc, char *argv[]) {
 			if (decode) {
 				error = base64_decode(in, out, b64_table);
 			} else {
-				base64_encode(in, out, b64_table);
+				base64_encode(in, out, b64_table, words_per_line);
 			}
 
 			fclose(in);

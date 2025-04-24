@@ -2,15 +2,22 @@
 
 
 
-void base64_encode(FILE *in, FILE *out, const char *b64_table) {
-	unsigned char inbuf[3], outbuf[4];
+void base64_encode(FILE *in, FILE *out, const char *b64_table, int words_per_line) {
+	unsigned char inbuf[3], outbuf[5];
+	outbuf[4] = '\n'; // outbuf is "generally" only 4 bytes
+
 	size_t bytes;
+	int words_written = 0;
+
 	while ((bytes = fread(inbuf, 1, 3, in)) > 0) {
 		outbuf[0] = b64_table[inbuf[0] >> 2];
 		outbuf[1] = b64_table[((inbuf[0] & 0x03) << 4) | (bytes > 1 ? inbuf[1] >> 4 : 0)];
 		outbuf[2] = (bytes > 1) ? b64_table[((inbuf[1] & 0x0F) << 2) | (bytes > 2 ? inbuf[2] >> 6 : 0)] : '=';
 		outbuf[3] = (bytes > 2) ? b64_table[inbuf[2] & 0x3F] : '=';
-		fwrite(outbuf, 1, 4, out);
+
+		int n = (words_per_line > 0 && (words_written+1) % words_per_line == 0) ? 5 : 4;
+		fwrite(outbuf, 1, n, out);
+		words_written++;
 	}
 }
 
