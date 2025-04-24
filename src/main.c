@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 
 				"  -d    --decode           decode input instead of encoding\n"
 				"  -i    --ignore-garbage   when decoding, ignore non-alphabet characters\n"
-				"  -u    --url-safe         use Base64URL encoding\n\n"
+				"  -u    --url-safe         use Base64URL encoding\n"
 				"  -w    --wrap             wrap encoded lines after 80 characters\n\n"
 
 				"  -h    --help             show this help message and exit\n"

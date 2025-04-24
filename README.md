@@ -72,16 +72,19 @@ b64 [options] <file1> [file2 ...]
 `|` redirects the output to `./b64 -d`,
 which then decodes it back.
 
-<!-- ## 📂 Project Structure
+## 📂 Project Structure
 
 ```
 b64/
-├── src/
-│   └── b64.c         # Source code
-├── build/            # Build artifacts (ignored by git)
-├── CMakeLists.txt    # Build configuration
-└── README.md         # Project documentation
-``` -->
+├── src --- 1 day ago
+│	├── base64.c --- 8 minutes ago, 1 hashlines, 14 blocks, 45 statements, 1 comments
+│	├── base64.h --- 2 minutes ago, 9 hashlines, 1 blocks, 5 statements, 3 comments
+│	├── main.c --- 4 minutes ago, 6 hashlines, 21 blocks, 45 statements, 2 comments
+│	├── version.h --- 1 day ago, 22 hashlines, 5 comments
+├── CMakeLists.txt --- 1 day ago, 12 lines
+├── LICENSE.md --- 1 day ago
+├── README.md --- 1 minute ago, 7 headers
+```
 
 ## 📄 License
 
